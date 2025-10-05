@@ -28,7 +28,7 @@ M.setup = function()
     },
   })
 
-  -- toggle focus with "-"
+  -- Toggle focus with "-"
   vim.keymap.set("n", "-", function()
     if vim.bo.filetype == "neo-tree" then
       vim.cmd("wincmd p")
@@ -52,6 +52,7 @@ M.setup = function()
     end
   end, { silent = true, desc = "Neo-tree: toggle sidebar" })
 
+  -- Open Neo-tree on startup
   vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
       vim.cmd("Neotree show left")

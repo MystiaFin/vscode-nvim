@@ -7,7 +7,25 @@ vim.api.nvim_set_keymap("v", ">", ">gv", { noremap = true, silent = true })
 -- Buffer map
 vim.keymap.set("n", "<Tab>", ":bnext<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<S-Tab>", ":bprevious<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>w", ":bd<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>w", function()
+  local buf = vim.api.nvim_get_current_buf()
+  local buf_count = 0
+  
+  -- Count listed buffers
+  for _, b in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(b) and vim.bo[b].buflisted then
+      buf_count = buf_count + 1
+    end
+  end
+  
+  -- If more than one buffer, switch before deleting
+  if buf_count > 1 then
+    vim.cmd("BufferLineCycleNext")
+    vim.cmd("bdelete " .. buf)
+  else
+    vim.cmd("bdelete")
+  end
+end, { noremap = true, silent = true })
 
 -- Dismiss message
 vim.keymap.set("n", "<leader>l", "<cmd>NoiceDismiss<CR>")
